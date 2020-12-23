@@ -1,0 +1,19 @@
+{
+  "name": "dflyff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r esm index.js"
+  },
+  "author": "Maxime",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "esm": "^3.2.25",
+    "fetch": "^1.1.0",
+    "html-entities": "^1.4.0",
+    "node-fetch": "^2.6.1"
+  }
+}
