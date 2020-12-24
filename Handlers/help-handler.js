@@ -9,6 +9,10 @@ const helps = [
     command: "!boite <Nom de la boite>",
     description: "Affiche le contenu de la boîte indiquée",
   },
+  {
+    command: "!gs rank <Nom du serveur>",
+    description: "Affiche le classement de la dernière GS",
+  },
 ];
 
 const helpHandler = msg => {

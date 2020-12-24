@@ -11,6 +11,8 @@ import {
 
 import { helpHandler } from "./Handlers/help-handler";
 
+import { handleGsCommand } from "./Handlers/gs-handler";
+
 const client = new Client();
 
 client.on("ready", () => {
@@ -28,6 +30,9 @@ client.on("message", msg => {
     }
   } else if (msg.content.toLowerCase().startsWith("!dflyff")) {
     helpHandler(msg);
+  } else if (msg.content.toLowerCase().startsWith("!gs ")) {
+    let args = getArguments("!gs ", msg.content, 2);
+    handleGsCommand(msg, args);
   } else {
     handlePendingBoxRequest(msg);
   }
