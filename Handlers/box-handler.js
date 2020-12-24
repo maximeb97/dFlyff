@@ -28,6 +28,62 @@ const handleBoxSearch = (msg, boxName) => {
   });
 };
 
+const rarityColors = [
+  {
+    min: 0.0,
+    max: 0.2,
+    color: 0xff8900, // Rare
+  },
+  {
+    min: 0.2,
+    max: 0.4,
+    color: 0xf6ff00,
+  },
+  {
+    min: 0.4,
+    max: 0.8,
+    color: 0xe770ff,
+  },
+  {
+    min: 0.8,
+    max: 1.99,
+    color: 0xff99e9,
+  },
+  {
+    min: 1.99,
+    max: 4.0,
+    color: 0x00daff,
+  },
+  {
+    min: 4.0,
+    max: 9.99,
+    color: 0xa5f1ff,
+  },
+  {
+    min: 9.99,
+    max: 19.99,
+    color: 0x8aff91,
+  },
+  {
+    min: 19.99,
+    max: 100,
+    color: 0xf0f0f0,
+  },
+];
+
+const getColorFromProbability = probability => {
+  if (!probability) {
+    return rarityColors[rarityColors.length - 1].color;
+  }
+  const color = rarityColors.filter(rarity => {
+    return probability <= rarity.max && probability >= rarity.min;
+  });
+  if (color.length > 0) {
+    return color[0].color;
+  }
+  return 0xffffff;
+};
+
 const handlePendingBoxRequest = msg => {
   let id = msg.author.id;
   if (id && ClientRequests.getRequest(id)) {
@@ -41,9 +97,19 @@ const handlePendingBoxRequest = msg => {
           items.map(item => {
             let embedItem = new MessageEmbed()
               .setTitle(ClientRequests.getRequest(id)[n])
-              .setColor(0x4fff4f)
-              .setImage(item.img)
-              .addField(item.title, item.description);
+              .setColor(getColorFromProbability(item.probability))
+              .setImage(item.img);
+            let title =
+              item.title +
+              (item.probability ? ` - (~${item.probability}%)` : "");
+            if (item.link) {
+              embedItem.addField(
+                title,
+                `${item.description} [Voir le contenu de cette boîte](${item.link})`
+              );
+            } else {
+              embedItem.addField(title, item.description);
+            }
             msg.reply(embedItem);
           });
           ClientRequests.deleteRequest(id);

@@ -37,19 +37,31 @@ const getBoxContent = async name => {
   const html = await content.text();
 
   const regexBox = new RegExp(
-    "<div class='ligne_objet_boite'>.*?<img src='(.*?)'.*?<div class='name'>(.*?)</div>.*?<div class='description'>(.*?)</div>",
+    "<div class='ligne_objet_boite'>.*?<img src='(.*?)'.*?<div class='name'>(.*?)</div>.*?<div class='description'>(.*?)</div>.*?<div class='obtention'>(<em>(.*?)</em>|<b>(.*?)%</b>.*?)*?</div>",
     "gm"
   );
-
   let match = regexBox.exec(html);
-
   let results = [];
 
   while (match != null) {
+    let title = match[2];
+    let link = null;
+
+    const regexLink = new RegExp("<a href='(.*?)'>(.*?)</a>", "gm");
+
+    let matchLink = regexLink.exec(title);
+
+    if (matchLink) {
+      link = encodeURI(BASE_URL + matchLink[1]);
+      title = matchLink[2];
+    }
+
     results.push({
       img: BASE_URL + match[1],
-      title: match[2],
-      description: match[3],
+      title: title,
+      description: match[3] == "0" ? "*Aucune description*" : match[3],
+      link: link,
+      probability: match[6] ? parseFloat(match[6]) : null,
     });
     match = regexBox.exec(html);
   }
