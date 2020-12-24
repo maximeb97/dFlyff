@@ -20,7 +20,7 @@ const helpHandler = msg => {
     .setTitle("dFlyff - Bot discord d'utilitaires Flyff")
     .setColor(0x007f00)
     .setDescription(
-      "Basé en grande partie sur le site du [Croquignoleur](https://croquignoleur.fr/) (merci à Barlaf !)"
+      "Basé en grande partie sur le site du [Croquignoleur](https://croquignoleur.fr/) (merci à Barlaf !)\nSi vous avez des questions ou suggestions contactez Nociif#5969"
     );
   helps.map(help => {
     embed.addField(help.command, help.description);
