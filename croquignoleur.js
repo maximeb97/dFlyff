@@ -17,6 +17,7 @@ const getBoxList = async (query = "") => {
 
   while (match != null) {
     if (match[1].toLowerCase().includes(query.toLowerCase())) {
+      match[1] = match[1].replace(/&#39;/g, "'");
       results.push(match[1]);
     }
     match = regexBox.exec(html);
