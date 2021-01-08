@@ -40,7 +40,9 @@ const getBoxLink = name => {
 };
 
 const getBoxContent = async name => {
-  const content = await fetch(getBoxLink(name));
+  const content = await fetch(getBoxLink(name), {
+    agent: httpsAgent,
+  });
 
   const html = await content.text();
 
