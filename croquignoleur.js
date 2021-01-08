@@ -2,9 +2,16 @@ import fetch from "node-fetch";
 
 const BASE_URL = "https://croquignoleur.fr/";
 
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+});
+
 const getBoxList = async (query = "") => {
   const content = await fetch(
-    "https://croquignoleur.fr/index?page=flyff-boite"
+    "https://croquignoleur.fr/index?page=flyff-boite",
+    {
+      agent: httpsAgent,
+    }
   );
 
   const html = await content.text();
