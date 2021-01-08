@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-
+const https = require("https");
 const BASE_URL = "https://croquignoleur.fr/";
 
 const httpsAgent = new https.Agent({
