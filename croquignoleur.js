@@ -29,8 +29,10 @@ const getBoxList = async (query = "") => {
     }
     match = regexBox.exec(html);
   }
-
-  return results;
+  return results.map(name => ({
+    name,
+    url: getBoxLink(name),
+  }));
 };
 
 const getBoxLink = name => {
@@ -47,7 +49,7 @@ const getBoxContent = async name => {
   const html = await content.text();
 
   const regexBox = new RegExp(
-    "<div class='ligne_objet_boite'>.*?<img src='(.*?)'.*?<div class='name'>(.*?)</div>.*?<div class='description'>(.*?)</div>.*?<div class='obtention'>(<em>(.*?)</em>|<b>(.*?)%</b>.*?)*?</div>",
+    "<div class='ligne_objet_boite'>.*?<img src='(.*?)'.*?<div class='name'>(.*?)<\/div>.*?<div class='description'>(.*?)<\/div>.*?<div class='obtention'>(<em>(.*?)<\/em>|<b>(.*?)%<\/b>.*?)*?<\/div>",
     "gm"
   );
   let match = regexBox.exec(html);
@@ -68,8 +70,8 @@ const getBoxContent = async name => {
 
     results.push({
       img: BASE_URL + match[1],
-      title: title,
-      description: match[3] == "0" ? "*Aucune description*" : match[3],
+      title: title.replace(/<[^>]*>?/gm, ''),
+      description: match[3] == "0" || !match[3].length ? "*Aucune description*" : match[3].replace(/<[^>]*>?/gm, ''),
       link: link,
       probability: match[6] ? parseFloat(match[6]) : null,
     });

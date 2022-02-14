@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { XmlEntities } from "html-entities";
-import { getBoxContent, getBoxList, getBoxLink } from "../croquignoleur";
+import { getBoxContent, getBoxList } from "../croquignoleur";
 import ClientRequests from "../client-requests";
 
 const entities = new XmlEntities();
@@ -16,9 +16,9 @@ const handleBoxSearch = (msg, boxName) => {
           "Entrez le numéro de la boite que vous voulez inspecter"
         );
       boxes.map((box, index) => {
-        box = entities.decode(box);
+        let name = entities.decode(box.name);
         let i = parseInt(index) + 1;
-        embed.addField("`" + i + "`: " + box, box, true);
+        embed.addField("`" + i + "`: " + name, `[${name}](${box.url})`, true);
       });
       ClientRequests.setRequest(id, boxes);
       msg.reply(embed);
@@ -90,13 +90,13 @@ const handlePendingBoxRequest = msg => {
     let n = parseInt(msg.content);
     if (n) {
       n = n - 1;
-      getBoxContent(ClientRequests.getRequest(id)[n])
+      getBoxContent(ClientRequests.getRequest(id)[n].name)
         .then(items => {
-          let link = getBoxLink(ClientRequests.getRequest(id)[n]);
+          let link = ClientRequests.getRequest(id)[n].link;
           msg.reply("tu peux aussi voir le contenu ici: " + link);
           items.map(item => {
             let embedItem = new MessageEmbed()
-              .setTitle(ClientRequests.getRequest(id)[n])
+              .setTitle(ClientRequests.getRequest(id)[n].name)
               .setColor(getColorFromProbability(item.probability))
               .setImage(item.img);
             let title =
